@@ -26,6 +26,18 @@ const TruyenHoanHotRouter = require('./Router/TruyenHoanHotRouter')
 app.use(cors());
 app.use(express.json());
 
+// Health check endpoint for Docker
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || 'development',
+        database: 'connected', // You can add actual DB health check here
+        version: process.env.npm_package_version || '1.0.0'
+    });
+});
+
 // ------------------------ Use router ------------------------ //
 app.use('/', TruyenTienHiepRouter);
 app.use('/', TheLoaiTruyenRouter);
@@ -98,11 +110,10 @@ const startServer = async () => {
 
     }
     catch (error) {
-        console.error("[❌ Unable to start server:", error.message);
+        console.error("[❌ Server startup failed]:", error.message);
+        process.exit(1);
     }
 };
-console.log('-----------------------------------------------------------------------');
 
-// Run server
 startServer();
 

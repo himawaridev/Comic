@@ -2,13 +2,12 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import axios from "axios";
 import Image from "next/image";
-import Link from "next/link";
-import { Flex, Spin, Dropdown, Space, Typography, message } from "antd";
 import clsx from "clsx";
 import { listenForDataUpdates, listenForErrors } from "../services/socketService";
+import { Link, Flex, Spin, Dropdown, Space, Typography, message, FireTwoTone } from "@/lib/Export_lib";
 
 // Import scss and any:
-import "@/components/TruyenHoanHotBanner.scss";
+import "@/Views/Carousel.scss";
 
 interface Comic {
     id: number;
@@ -23,10 +22,10 @@ interface Comic {
 
 type CategoryType = 'hot' | 'tien-hiep' | 'kiem-hiep';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'; // Set API URL
+const API_BASE_URL = process.env.PORT_API || 'http://localhost:8000'; // Set API URL
 const PAGE_SIZE = 13; // Set item quantity per page
 
-const TruyenHoanHotComponent = () => {
+const Carousel = () => {
     const [data, setData] = useState<Comic[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -43,17 +42,17 @@ const TruyenHoanHotComponent = () => {
                 apiUrl = `${API_BASE_URL}/getTruyenTienHiepController?page=1&limit=${PAGE_SIZE}`;
                 break;
             case "kiem-hiep":
-                apiUrl = `${API_BASE_URL}/getTruyenHotController?page=1&limit=${PAGE_SIZE}`;
+                apiUrl = `${API_BASE_URL}/getTruyenKiemHiepController?page=1&limit=${PAGE_SIZE}`;
                 break;
             default:
-                apiUrl = `${API_BASE_URL}/getTruyenHoanHotController?page=1&limit=${PAGE_SIZE}`;
+                apiUrl = `${API_BASE_URL}/getTruyenHotController?page=1&limit=${PAGE_SIZE}`;
         }
 
         try {
             const { data: responseData } = await axios.get(apiUrl);
-            const comicData = responseData.TruyenHoanHotController ||
-                responseData.TruyenHotController ||
-                responseData.TruyenTienHiepController;
+            const comicData = responseData.TruyenTienHiepController ||
+                responseData.TruyenKiemHiepController ||
+                responseData.TruyenHotController;
 
             if (Array.isArray(comicData)) {
                 setData(comicData);
@@ -118,23 +117,26 @@ const TruyenHoanHotComponent = () => {
         }
         if (!isLoading && !error && data.length === 0) {
             return (
-                <Link href="/HoTroNhanh" style={{ marginLeft: '25px', color: '#1890ff', fontSize: '13px' }}>Không có dữu liệu!</Link>
+                <Flex justify="center" align="center" style={{ height: '520px', cursor: 'pointer' }}>
+                    <Spin size="default" />
+                    <Link href="/HoTroNhanh" style={{ marginLeft: '25px', color: '#1890ff', fontSize: '13px' }}>Không có dữu liệu!</Link>
+                </Flex>
             );
         }
         return null;
     };
 
     return (
-        <div id="TruyenHoanHotComponent">
+        <div id="Carousel">
             {contextHolder}
-            <div className="TruyenHoanHotComponentHeader">
+            <div className="CarouselHeader">
                 <Header setCategory={handleCategoryChange} currentCategory={category} />
             </div>
             {renderStatus()}
             <div className="THCC">
                 <div className="WrapperTHCC">
                     {data.map((item, index) => (
-                        <div key={item.id} className={clsx("TruyenHoanHotComponentContent", {
+                        <div key={item.id} className={clsx("CarouselContent", {
                             "first-item": index === 0,
                             "seventh-item": index === 7
                         })}>
@@ -144,11 +146,11 @@ const TruyenHoanHotComponent = () => {
                                     width={index === 0 ? 258 : 129}
                                     height={index === 0 ? 394 : 192}
                                     alt={item.NameComic || "Comic image"}
-                                    className="TruyenHoanHotComponentImages"
+                                    className="CarouselImages"
                                     loading={index < 4 ? "eager" : "lazy"}
                                     priority={index === 0}
                                 />
-                                <div className="TruyenHoanHotComponentName">{item.NameComic}</div>
+                                <div className="CarouselName">{item.NameComic}</div>
                             </Link>
                         </div>
                     ))}
@@ -198,9 +200,9 @@ const Header = ({ setCategory, currentCategory }: HeaderProps) => {
     }, [currentCategory]);
 
     return (
-        <div className="TruyenHoanHotComponentTitle">
+        <div className="CarouselTitle">
             <div className="TitleNameBanner">
-                <div className="TitleName">TRUYỆN HOT</div>
+                <div className="TitleName">TRUYỆN HOT <FireTwoTone className="FireTwoTone" /></div>
                 <Dropdown
                     menu={{
                         items: menuItems,
@@ -219,6 +221,6 @@ const Header = ({ setCategory, currentCategory }: HeaderProps) => {
     );
 };
 
-export default TruyenHoanHotComponent;
+export default Carousel;
 
 

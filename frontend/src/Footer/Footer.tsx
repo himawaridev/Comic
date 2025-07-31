@@ -2,7 +2,7 @@
 
 import { Typography, Divider } from 'antd';
 import Link from 'next/link';
-import './Footer.scss';
+import '@/Views/Footer.scss';
 
 const { Text } = Typography;
 

@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: comic_mysql_dev
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME:-comic_dev}
+      MYSQL_USER: ${MYSQL_USERNAME:-comic_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-comic_pass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_dev_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - comic_dev_network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+
+  # Backend API (Development)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend.dev
+    container_name: comic_backend_dev
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=development
+      - MYSQL_URL=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DB_NAME=${MYSQL_DB_NAME:-comic_dev}
+      - MYSQL_USERNAME=${MYSQL_USERNAME:-comic_user}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-comic_pass}
+      - PORT_SERVER_RUN=8000
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - comic_dev_network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - ./logs:/app/logs
+    command: npm run comic
+
+  # Frontend Next.js (Development)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend.dev
+    container_name: comic_frontend_dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT_API=http://backend:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - comic_dev_network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev
+
+volumes:
+  mysql_dev_data:
+    driver: local
+
+networks:
+  comic_dev_network:
+    driver: bridge

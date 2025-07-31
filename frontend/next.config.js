@@ -1,52 +1,69 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: true,
+    // Enable standalone output for Docker
+    output: 'standalone',
+
+    // Disable server-side image optimization in Docker
     images: {
-        remotePatterns: [
-            {
-                protocol: 'http',
-                hostname: 'localhost',
-                port: '8000',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'truyenhoan.com',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'cdn.truyenhoan.com',
-                pathname: '/**',
-            },
-        ],
+        unoptimized: true,
     },
+
+    // Enable experimental features
+    experimental: {
+        // Enable app directory
+        appDir: true,
+    },
+
+    // Environment variables
+    env: {
+        PORT_API: process.env.PORT_API || 'http://localhost:8000',
+    },
+
+    // Webpack configuration
+    webpack: (config, { isServer }) => {
+        // Add fallbacks for Node.js modules
+        if (!isServer) {
+            config.resolve.fallback = {
+                ...config.resolve.fallback,
+                fs: false,
+                net: false,
+                tls: false,
+            };
+        }
+
+        return config;
+    },
+
+    // Headers for security
     async headers() {
         return [
             {
-                source: '/:path*',
+                source: '/(.*)',
                 headers: [
                     {
                         key: 'X-Frame-Options',
-                        value: 'DENY',
+                        value: 'SAMEORIGIN',
                     },
                     {
                         key: 'X-Content-Type-Options',
                         value: 'nosniff',
                     },
                     {
-                        key: 'X-XSS-Protection',
-                        value: '1; mode=block',
+                        key: 'Referrer-Policy',
+                        value: 'origin-when-cross-origin',
                     },
                 ],
             },
         ];
     },
-    async rewrites() {
+
+    // Redirects
+    async redirects() {
         return [
             {
                 source: '/api/:path*',
-                destination: 'http://localhost:8000/:path*',
+                destination: `${process.env.PORT_API || 'http://localhost:8000'}/:path*`,
+                permanent: false,
             },
         ];
     },

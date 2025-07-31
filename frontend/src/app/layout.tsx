@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/Context/ThemeContext";
 import { SocketProvider } from "@/Context/SocketContext";
 
 // Import use golbal:
-import Footer from "@/components/Footer";
+import Footer from "@/Footer/Footer";
 import Navigation from "@/Navigation/Navigation";
 
 const inter = Inter({

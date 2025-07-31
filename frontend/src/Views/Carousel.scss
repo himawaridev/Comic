@@ -1,7 +1,7 @@
-#TruyenHoanHotComponent {
+#Carousel {
     margin: 35px 0px 0px 0px;
 
-    .TruyenHoanHotComponentTitle {
+    .CarouselTitle {
 
         .TitleNameBanner {
             display: flex;
@@ -14,7 +14,11 @@
                 font-weight: 500;
                 align-self: center;
                 border-bottom: 1px solid rgb(78, 78, 78);
-                margin: 0px 900px 0px 0px;
+                margin: 0px 886px 0px 0px;
+
+                .FireTwoTone {
+                    cursor: pointer;
+                }
             }
     
             .Button {
@@ -53,16 +57,16 @@
             flex-flow: row wrap;
             max-width: 1105px;
     
-            .TruyenHoanHotComponentContent {
+            .CarouselContent {
                 margin: 5px 5px 5px 5px;
                 width: 129px;
                 height: 192px;
     
-                .TruyenHoanHotComponentImages {
+                .CarouselImages {
                     object-fit: cover;
                 }
     
-                .TruyenHoanHotComponentName {
+                .CarouselName {
                     text-shadow: 1px 2px 2px #000;
                     text-align: center;
                     color: white;
@@ -75,11 +79,11 @@
                 }
             }
     
-            .TruyenHoanHotComponentContent.first-item {
+            .CarouselContent.first-item {
                 width: 258px; // Ảnh đầu tiên to gấp đôi
             }
     
-            .TruyenHoanHotComponentContent.seventh-item {
+            .CarouselContent.seventh-item {
                 margin-left: 273px; // Ảnh thứ 7 (index 6) có margin-left 200px
             }
         }

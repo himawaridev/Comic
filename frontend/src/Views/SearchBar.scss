@@ -32,6 +32,30 @@
                 color: black;
             }
         }
+    }
 
+    .ListComic {
+        margin: 20px 0px 0px 0px;
+
+        .ListComicContainer {
+            display: flex;
+            justify-content: center;
+
+            .ListComicItem {
+                margin: 0px 10px 0px 10px;
+                border-radius: 50px;
+                background-color: #ddd;
+                padding: 5px 15px 5px 15px;
+
+                .ListComicItemLink {
+                    font-size: 13px;
+                    text-decoration: solid;
+                }
+            }
+
+            .ListComicItem:hover {
+                cursor: pointer;
+            }
+        }
     }
 }

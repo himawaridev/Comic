@@ -1,6 +1,6 @@
 'use client'
-import TruyenHoanHotBanner from '@/components/TruyenHoanHotBanner';
-import SearchBar from '@/components/SearchBar/SearchBar';
+import Carousel from '@/Carousel/Carousel';
+import SearchBar from '@/SearchBar/SearchBar';
 import { EffectLoading, useLoading } from '@/app/components';
 
 // Import scss and any:
@@ -17,7 +17,7 @@ const HomePage = () => {
 
     return (
         <main id="HomePage">
-            <TruyenHoanHotBanner />
+            <Carousel />
             <SearchBar />
         </main>
     );

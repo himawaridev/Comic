@@ -1,12 +1,7 @@
-import { Flex, Spin } from "antd";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { SearchOutlined } from "@ant-design/icons";
-import Link from "next/link";
-import { Tooltip } from 'antd';
+import { Tooltip, Link, SearchOutlined, axios, useState, useEffect, Flex, Spin } from '@/lib/Export_lib'
 
 // Import scss and any:
-import "@/components/SearchBar/SearchBar.scss";
+import "@/Views/SearchBar.scss";
 
 interface TruyenTienHiepComponentType {
     id: number;
@@ -20,7 +15,7 @@ interface TruyenTienHiepComponentType {
     updatedAt: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:800'; // Set API URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'; // Set API URL
 const PAGE_SIZE = 25; // Set item quantity per page
 
 const SearchBar: React.FC = () => {
@@ -38,11 +33,11 @@ const SearchBar: React.FC = () => {
 
     const fetchData = (page: number) => {
         setIsLoading(true);
-        axios.get(`${API_BASE_URL}/getTruyenKiemHiepController?page=${page}&limit=${PAGE_SIZE}`)
+        axios.get(`${API_BASE_URL}/getTruyenTienHiepController?page=${page}&limit=${PAGE_SIZE}`)
             .then((response) => {
                 console.log("API Response:", response.data);
-                if (response.data && Array.isArray(response.data.TruyenKiemHiepController)) {
-                    setData(response.data.TruyenKiemHiepController);
+                if (response.data && Array.isArray(response.data.TruyenTienHiepController)) {
+                    setData(response.data.TruyenTienHiepController);
                     setTotalItems(response.data.total || 0); // Tổng số truyện
                 } else {
                     setError("Dữ liệu không hợp lệ!");
@@ -97,6 +92,19 @@ const SearchBar: React.FC = () => {
                     </div>
                 </div>
                 {renderStatus()}
+                {!isLoading && !error && data.length > 0 && (
+                    <div className="ListComic">
+                        <div className='ListComicContainer'>
+                            {data.slice(0, 5).map((comic) => (
+                                <div key={comic.id} className='ListComicItem'>
+                                    <Link href={comic.LinkComic} className='ListComicItemLink'>
+                                        {comic.Title}
+                                    </Link>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </main>
     )
