@@ -48,10 +48,12 @@ fs
     })
     .forEach(file => {
         // Với mỗi file `.js` được lọc:
+        console.log(`[🔄] Loading model from file: ${file}`);
         const model = require(path.join(__dirname, file))(sequelize);
         // Import file và gọi hàm để khởi tạo model với kết nối `sequelize`.
 
         db[model.name] = model;
+        console.log(`[✅] Model ${model.name} loaded successfully`);
         // Lưu model vào đối tượng `db` với tên của model làm key.
     });
 
@@ -63,6 +65,8 @@ Object.keys(db).forEach(modelName => {
         // Gọi `associate` và truyền toàn bộ models để thiết lập quan hệ.
     }
 });
+
+console.log('[📋] All loaded models:', Object.keys(db));
 
 db.sequelize = sequelize;
 // Lưu kết nối Sequelize vào đối tượng `db` để sử dụng trong ứng dụng.

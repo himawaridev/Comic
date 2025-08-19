@@ -1,17 +1,21 @@
-// Import model TruyenTienHiep từ thư mục Model
-const { TheLoaiTruyen } = require('../Model');
+/**
+ * THE LOAI TRUYEN CONTROLLER (TÁCH RIÊNG)
+ * Xử lý các API cho bảng thể loại truyện
+ */
 
+const { TheLoaiTruyen } = require('../Model');
+const { ok, fail } = require('../utils/response');
+
+/**
+ * Lấy toàn bộ thể loại truyện (không phân trang)
+ */
 const getTheLoaiTruyenController = async (req, res) => {
     try {
         const TheLoaiTruyenController = await TheLoaiTruyen.findAll();
-        return res.status(200).json({ TheLoaiTruyenController });
-    }
-    catch (error) {
-        return res.status(500).json({ error: error.message });  // Phản hồi nếu có lỗi
+        return ok(res, 'TheLoaiTruyenController', TheLoaiTruyenController);
+    } catch (error) {
+        return fail(res, 500, error.message);
     }
 };
 
-module.exports = {
-    getTheLoaiTruyenController
-};
-
+module.exports = { getTheLoaiTruyenController };

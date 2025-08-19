@@ -3,48 +3,24 @@ const app = express();
 const cors = require('cors');
 const { sequelize } = require('./Model');
 const http = require('http');
-const socketManager = require('./socket/socketManager');
 
 // Import Services:
 const { initServices } = require('./Check');
-const { autoUpdateData } = require('./LoadData'); // Import hàm tự động cập nhật dữ liệu
 
 // Loading environment variables from file .env:
 const dotenv = require('dotenv');
 dotenv.config();
 console.log("DB USER server:", process.env.PORT_SERVER_RUN); // Kiểm tra xem biến có được đọc không
 
-// Import router from Router:
-const TruyenTienHiepRouter = require('./Router/TruyenTienHiepRouter');
-const TheLoaiTruyenRouter = require('./Router/TheLoaiTruyenRouter');
-const TruyenKiemHiepRouter = require('./Router/TruyenKiemHiepRouter');
-const TruyenMoiCapNhatRouter = require('./Router/TruyenMoiCapNhatRouter');
-const TruyenHotRouter = require('./Router/TruyenHotRouter');
-const TruyenHoanHotRouter = require('./Router/TruyenHoanHotRouter')
+// Import unified router from Router:
+const TruyenRouterUnified = require('./Router/TruyenRouterUnified');
 
 // ------------------------ Use app ------------------------ //
 app.use(cors());
 app.use(express.json());
 
-// Health check endpoint for Docker
-app.get('/health', (req, res) => {
-    res.status(200).json({
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        environment: process.env.NODE_ENV || 'development',
-        database: 'connected', // You can add actual DB health check here
-        version: process.env.npm_package_version || '1.0.0'
-    });
-});
-
-// ------------------------ Use router ------------------------ //
-app.use('/', TruyenTienHiepRouter);
-app.use('/', TheLoaiTruyenRouter);
-app.use('/', TruyenKiemHiepRouter);
-app.use('/', TruyenMoiCapNhatRouter);
-app.use('/', TruyenHotRouter);
-app.use('/', TruyenHoanHotRouter);
+// ------------------------ Use unified router ------------------------ //
+app.use('/', TruyenRouterUnified);
 
 // ------------------------ Khởi động Server ------------------------ //
 const startServer = async () => {
@@ -70,29 +46,16 @@ const startServer = async () => {
 
         // ----- Run servies:
         try {
-            await initServices(); // Gọi khởi tạo services ở file check.js
+            await initServices();
             console.log("[✅ Services] initialized successfully: Check.js");
-        }
-        catch (error) {
+        } catch (error) {
             console.error("[❌ Services] initialization failed:", error.message);
-            process.exit(1); // Dừng server nếu khởi tạo services thất bại
-        }
-
-        try {
-            await autoUpdateData(); // Gọi khởi tạo services ở file LoadData.js
-            console.log("[✅ AutoUpdate] initialized successfully: LoadData.js");
-        }
-        catch (error) {
-            console.error("[❌ AutoUpdate initialization failed:", error.message);
-            process.exit(1); // Dừng server nếu khởi tạo services thất bại
+            process.exit(1);
         }
 
         //------------------------------ Start server ------------------------------//
         const PORT = process.env.PORT_SERVER_RUN || 8000;
         const server = http.createServer(app);
-
-        // Khởi tạo Socket.IO thông qua SocketManager
-        socketManager.initialize(server);
 
         server.listen(PORT, () => {
             console.log('-----------------------------------------------------------------------');
@@ -102,7 +65,6 @@ const startServer = async () => {
         // Xử lý khi server đóng
         process.on('SIGTERM', () => {
             console.log('SIGTERM signal received: closing HTTP server');
-            socketManager.close();
             server.close(() => {
                 console.log('HTTP server closed');
             });

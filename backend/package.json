@@ -6,7 +6,9 @@
   "main": "src/server.js",
   "scripts": {
     "test": "...",
-    "server": "node server.js",
+    "start": "node start-server.js",
+    "dev": "nodemon start-server.js",
+    "server": "node src/server.js",
     "comic": "nodemon --inspect src/server.js"
   },
   "repository": {

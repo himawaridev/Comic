@@ -56,10 +56,16 @@ body {
   background: rgb(218, 218, 218);
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@500&display=swap');
+
+* {
+  font-family: 'Lexend Deca', sans-serif;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: #fff;
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

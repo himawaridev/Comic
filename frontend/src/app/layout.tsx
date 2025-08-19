@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/Context/ThemeContext";
-import { SocketProvider } from "@/Context/SocketContext";
 
 // Import use golbal:
 import Footer from "@/Footer/Footer";
@@ -31,16 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${robotoMono.variable}`}>
-        <ThemeProvider>
-          {/* SocketProvider: Quản lý kết nối socket và realtime updates */}
-          <SocketProvider>
-            <Navigation />
-            <main className="main-content">
-              {children}
-            </main>
-            <Footer />
-          </SocketProvider>
-        </ThemeProvider>
+        <Navigation />
+        <main className="main-content">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

@@ -3,7 +3,6 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import axios from "axios";
 import Image from "next/image";
 import clsx from "clsx";
-import { listenForDataUpdates, listenForErrors } from "../services/socketService";
 import { Link, Flex, Spin, Dropdown, Space, Typography, message, FireTwoTone } from "@/lib/Export_lib";
 
 // Import scss and any:
@@ -71,28 +70,6 @@ const Carousel = () => {
     useEffect(() => {
         fetchData(category);
     }, [category, fetchData]);
-
-    // Thêm Socket.IO listeners
-    useEffect(() => {
-        // Lắng nghe sự kiện cập nhật dữ liệu
-        listenForDataUpdates((data) => {
-            messageApi.info({
-                content: 'Có dữ liệu mới! Đang cập nhật...',
-                duration: 2,
-            });
-            // Tự động fetch lại dữ liệu khi có cập nhật
-            fetchData(category);
-        });
-
-        // Lắng nghe sự kiện lỗi
-        listenForErrors((error) => {
-            messageApi.error({
-                content: 'Có lỗi xảy ra khi cập nhật dữ liệu',
-                duration: 3,
-            });
-            console.error('Socket error:', error);
-        });
-    }, [category, fetchData, messageApi]);
 
     const handleCategoryChange = useCallback((newCategory: CategoryType) => {
         setCategory(newCategory);
@@ -202,7 +179,7 @@ const Header = ({ setCategory, currentCategory }: HeaderProps) => {
     return (
         <div className="CarouselTitle">
             <div className="TitleNameBanner">
-                <div className="TitleName">TRUYỆN HOT <FireTwoTone className="FireTwoTone" /></div>
+                <Link href="/TruyenHot" className="TitleName">TRUYỆN HOT <FireTwoTone className="FireTwoTone" /></Link>
                 <Dropdown
                     menu={{
                         items: menuItems,
