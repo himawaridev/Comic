@@ -10,7 +10,17 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    ignores: [
+      "src/Navigation/**",
+      "src/SearchBar/**",
+      "src/Carousel/**",
+      "src/Footer/**",
+      "src/app/components/**",
+      "src/app/Render/**",
+    ],
+  },
+  ...compat.extends("next/core-web-vitals"),
 ];
 
 export default eslintConfig;

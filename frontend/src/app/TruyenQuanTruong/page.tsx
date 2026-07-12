@@ -1,26 +1,7 @@
-'use client';
-import { EffectLoading, RenderListTruyen, RenderTypeTruyen, useLoading } from '@/app/components';
+import ComicListPage from "@/components/story/ComicListPage";
 
-// Import scss and any:
-import "@/Views/page.scss";
+export const dynamic = "force-dynamic";
 
-const TruyenQuanTruong: React.FC = () => {
-    const isLoading = useLoading();
-
-    if (isLoading) {
-        return (
-            <EffectLoading size='large' />
-        )
-    }
-
-    return (
-        <main id="Truyen" className='TruyenQuanTruong'>
-            <RenderListTruyen
-                title="TRUYỆN QUAN TRƯỜNG"
-                apiEndpoint="http://localhost:8000/getTruyenQuanTruongController"
-            />
-            <RenderTypeTruyen />
-        </main>
-    )
+export default function TruyenQuanTruongPage() {
+  return <ComicListPage title="Truyen quan truong" collection="quanTruong" />;
 }
-export default TruyenQuanTruong;

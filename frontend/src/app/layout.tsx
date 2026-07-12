@@ -1,24 +1,19 @@
 import type { Metadata } from "next";
-import { Inter, Roboto_Mono } from "next/font/google";
+import { Oswald, Poppins } from "next/font/google";
 import "./globals.css";
+import AppShell from "@/components/layout/AppShell";
 
-// Import use golbal:
-import Footer from "@/Footer/Footer";
-import Navigation from "@/Navigation/Navigation";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+const poppins = Poppins({
+  variable: "--font-ui",
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
 });
-
-const robotoMono = Roboto_Mono({
-  variable: "--font-roboto-mono",
-  subsets: ["latin"],
-});
+const oswald = Oswald({ variable: "--font-heading", subsets: ["latin", "latin-ext"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Truyện Hoàn - Trang đọc truyện hay",
-  description: "Truyện Hoàn - Trang đọc truyện hay",
+  title: "Truyen Hoan - ung dung doc truyen hien dai",
+  description: "Doc truyen chu va comic voi giao dien mobile-first, sach va hien dai.",
 };
 
 export default function RootLayout({
@@ -27,15 +22,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${robotoMono.variable}`}>
-        <Navigation />
-        <main className="main-content">
-          {children}
-        </main>
-        <Footer />
+    <html lang="vi" data-theme="dark" suppressHydrationWarning>
+      <body className={`${poppins.variable} ${oswald.variable}`}>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
 }
-

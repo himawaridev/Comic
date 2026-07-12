@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+    experimental: {
+        serverComponentsExternalPackages: ["sequelize", "pg", "pg-hstore"],
+    },
     images: {
         remotePatterns: [
             {
@@ -11,4 +14,4 @@ const nextConfig = {
     },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

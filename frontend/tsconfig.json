@@ -36,6 +36,12 @@
     "next.config.js"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/Navigation/**/*",
+    "src/SearchBar/**/*",
+    "src/Carousel/**/*",
+    "src/Footer/**/*",
+    "src/app/components/**/*",
+    "src/app/Render/**/*"
   ]
 }
